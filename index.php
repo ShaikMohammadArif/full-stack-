@@ -1,75 +1,47 @@
-<?php
-$conn = new mysqli("localhost", "root", "", "studentdb");
-
-$sort = isset($_GET['sort']) ? $_GET['sort'] : "name";
-$department = isset($_GET['department']) ? $_GET['department'] : "all";
-
-$sql = "SELECT * FROM students";
-
-if($department != "all"){
-    $sql .= " WHERE department='$department'";
-}
-
-$sql .= " ORDER BY $sort ASC";
-
-$result = $conn->query($sql);
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student Records</title>
+    <title>Customer Order History</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Student Records</h2>
+<div class="container">
+    <h2>Customer Order History</h2>
 
-<form method="GET">
-    Sort By:
-    <select name="sort">
-        <option value="name">Name</option>
-        <option value="date">Date</option>
-    </select>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Date</th>
+        </tr>
 
-    Filter By Department:
-    <select name="department">
-        <option value="all">All</option>
-        <option value="CSE">CSE</option>
-        <option value="ECE">ECE</option>
-        <option value="IT">IT</option>
-    </select>
+        <!-- This data should be fetched dynamically using PHP -->
+        <?php
+        $conn = new mysqli("localhost","root","","ecommerce");
 
-    <button type="submit">Apply</button>
-</form>
+        $sql = "SELECT c.name, p.product_name, o.quantity, o.total_amount, o.order_date
+                FROM Orders o
+                JOIN Customers c ON o.customer_id = c.customer_id
+                JOIN Products p ON o.product_id = p.product_id
+                ORDER BY o.order_date DESC";
 
-<table border="1">
-<tr>
-    <th>Name</th>
-    <th>Department</th>
-    <th>Date</th>
-</tr>
+        $result = $conn->query($sql);
 
-<?php
-while($row = $result->fetch_assoc()){
-    echo "<tr>
-        <td>".$row['name']."</td>
-        <td>".$row['department']."</td>
-        <td>".$row['date']."</td>
-    </tr>";
-}
-?>
-</table>
-
-<h3>Department Count</h3>
-
-<?php
-$countQuery = "SELECT department, COUNT(*) as total FROM students GROUP BY department";
-$countResult = $conn->query($countQuery);
-
-while($row = $countResult->fetch_assoc()){
-    echo $row['department']." : ".$row['total']."<br>";
-}
-?>
+        while($row = $result->fetch_assoc()){
+            echo "<tr>
+                    <td>{$row['name']}</td>
+                    <td>{$row['product_name']}</td>
+                    <td>{$row['quantity']}</td>
+                    <td>{$row['total_amount']}</td>
+                    <td>{$row['order_date']}</td>
+                  </tr>";
+        }
+        ?>
+    </table>
+</div>
 
 </body>
 </html>

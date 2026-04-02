@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Form</title>
+    <style>
+        body { font-family: Arial; }
+        .form-group { margin: 10px 0; }
+        input, textarea { padding: 8px; width: 250px; }
+        
+        /* Hover effect */
+        input:hover, textarea:hover {
+            border: 2px solid blue;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Feedback Form</h2>
+
+<form id="feedbackForm">
+    <div class="form-group">
+        Name: <br>
+        <input type="text" id="name" onkeyup="validateName()">
+    </div>
+
+    <div class="form-group">
+        Email: <br>
+        <input type="text" id="email" onkeyup="validateEmail()">
+    </div>
+
+    <div class="form-group">
+        Feedback: <br>
+        <textarea id="feedback"></textarea>
+    </div>
+
+    <button type="button" ondblclick="submitForm()">Submit</button>
+</form>
+
+<script src="script.js"></script>
+
+</body>
+</html>
